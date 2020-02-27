@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Color color;
-    public Transform hitTransform;
-    private Vector3 HookShotPosition; 
-    private CharacterController chara;
-    public GameObject weapon; 
+
+
+    public GameObject weapon;
     public float speed = 7.5f;
     public float offset = 0.5f;
     public LayerMask mask;
     public LineRenderer line;
-    
+    public float distanceJoint = 0;
+    public Transform hitTransform;
 
+
+    private Vector3 HookShotPosition;  
     DistanceJoint2D joint; 
 
     void Start()
-    {
-        chara = GetComponent<CharacterController>();
+    {       
         joint = GetComponent<DistanceJoint2D>();
         joint.enabled = false;
         line.enabled = false; 
@@ -29,15 +29,10 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if(joint.distance > 1f)
+        if(joint.distance > distanceJoint)
         {
             joint.distance -= 0.2f;
-        }
-        else
-        {
-            line.enabled = false;
-            joint.enabled = false; 
-        } 
+        }            
          HookShot();
         
     }
@@ -71,7 +66,6 @@ public class Player : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-           Debug.Log("Modifying line");
            line.SetPosition(0, weapon.transform.position);
 
         }
@@ -91,9 +85,10 @@ public class Player : MonoBehaviour
             Debug.Log("Dead"); 
         }
 
-        if(other.tag == "Coins")
+        if(other.tag == "Coin")
         {
-            //collect coins
+            Debug.Log("Coin Collected");
+            Destroy(other.gameObject); 
         }
     }
 }

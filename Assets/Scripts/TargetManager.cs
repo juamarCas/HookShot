@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TargetManager : MonoBehaviour
 {
-    public Vector2 chanceToMove;
+    public float prob; 
     bool isMovable = false;
 
 
@@ -15,6 +15,7 @@ public class TargetManager : MonoBehaviour
     public float d_x;
     public float d_y;
     public float moveSpeed;
+    private Vector2 goingTo; 
 
     void Start()
     { 
@@ -31,15 +32,17 @@ public class TargetManager : MonoBehaviour
 
     public void initializeMovement()
     {
-        float rnd = Random.Range(chanceToMove[0], chanceToMove[1]);
+        
         float chance = Random.Range(0,100);
-        if(rnd < chance)
+        
+        if(chance < prob)
         {
             isMovable = true;
             for (int i = 0; i< numTargets; i++)
             {
                 Vector2 targetPos = new Vector2(transform.position.x + Random.Range(-d_x, d_x), transform.position.y + Random.Range(-d_y, d_y));
                 targets[i] = targetPos;
+                goingTo = targets[0]; 
             }
         }
     }
@@ -47,13 +50,20 @@ public class TargetManager : MonoBehaviour
     void move()
     {
          
-        if(Vector2.Distance(transform.position, targets[0])  >= 0.1f)
+        if(Vector2.Distance(transform.position, targets[0])  >= 0.1f && goingTo == targets[0])
         { 
             transform.position = Vector2.Lerp(transform.position,targets[0], moveSpeed * Time.deltaTime);
+        }else if(Vector2.Distance(transform.position, targets[0]) <= 0.1f && goingTo == targets[0])
+        {
+            goingTo = targets[1]; 
         }
-        else if (Vector2.Distance(transform.position, targets[1]) >= 0.1f)
+
+        if (Vector2.Distance(transform.position, targets[1]) >= 0.1f && goingTo == targets[1])
         { 
             transform.position = Vector2.Lerp(transform.position, targets[1], moveSpeed * Time.deltaTime);
+        }else if (Vector2.Distance(transform.position, targets[1]) <= 0.1f && goingTo == targets[1])
+        {
+            goingTo = targets[0];
         }
     }
 }

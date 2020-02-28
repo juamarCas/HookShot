@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public LineRenderer line;
     public float distanceJoint = 0;
     public Transform hitTransform;
+    private Vector2 hitpoint; 
 
 
     private Vector3 HookShotPosition;  
@@ -51,6 +52,7 @@ public class Player : MonoBehaviour
            
             if (hit.collider != null && hit.collider.gameObject.GetComponent<Rigidbody2D>() != null)
             {
+                hitpoint = hit.point; 
                 line.SetPosition(1, hit.point); 
                 line.SetPosition(0, weapon.transform.position);
                 
@@ -66,7 +68,16 @@ public class Player : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-           line.SetPosition(0, weapon.transform.position);
+            try
+            {
+                line.SetPosition(1, joint.connectedBody.transform.position);
+            }
+            catch(UnassignedReferenceException)
+            {
+                Debug.Log("no te preocupes"); 
+            }
+           
+            line.SetPosition(0, weapon.transform.position);
         }
 
         if (Input.GetMouseButtonUp(0))

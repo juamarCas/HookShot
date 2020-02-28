@@ -219,11 +219,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 826ffe28cfc3c5a4ea51b28bd67b178b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chanceToMove: {x: 0, y: 100}
+  prob: 50
   numTargets: 2
   targets:
   - {x: 2.1509927e+23, y: 0.00004253294}
   - {x: 0.000000052945676, y: 0.0000002097418}
-  d_x: 5
-  d_y: 5
-  moveSpeed: 3
+  d_x: 3
+  d_y: 2
+  moveSpeed: 1

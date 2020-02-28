@@ -98,7 +98,8 @@ public class Player : MonoBehaviour
         if(other.tag == "Coin")
         {
             Debug.Log("Coin Collected");
-            other.gameObject.SetActive(false); 
+            other.gameObject.SetActive(false);
+            GameManager.Instance.AddCoin(); 
         }
     }
 }

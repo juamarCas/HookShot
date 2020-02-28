@@ -7,8 +7,8 @@ public class Player : MonoBehaviour
 
 
     public GameObject weapon;
-    public float speed = 7.5f;
-    public float offset = 0.5f;
+    public float joinVelocity = 7.5f;
+    public float minJointDistance = 0.5f;
     public LayerMask mask;
     public LineRenderer line;
     public float distanceJoint = 0;
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
 
         if(joint.distance > distanceJoint)
         {
-            joint.distance -= 0.2f;
+            joint.distance = Mathf.Lerp(joint.distance, minJointDistance,joinVelocity * Time.deltaTime);
         }            
          HookShot();
         
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
             shootDirection = Camera.main.ScreenToWorldPoint(shootDirection);
             shootDirection = shootDirection - this.transform.position;
             shootDirection.z = 0.0f;
-            RaycastHit2D hit = Physics2D.Raycast(weapon.transform.position, shootDirection, Mathf.Infinity);
+            RaycastHit2D hit = Physics2D.Raycast(weapon.transform.position, shootDirection, Mathf.Infinity,mask.value);
             line.enabled = true;
            
             if (hit.collider != null && hit.collider.gameObject.GetComponent<Rigidbody2D>() != null)
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
                 line.SetPosition(1, hit.point); 
                 line.SetPosition(0, weapon.transform.position);
                 
-                HookShotPosition = hit.point; // punto donde colisionó el collider
+                HookShotPosition = hit.point; // punto donde colisionó el raycast
                 joint.enabled = true;
                 joint.connectedBody = hit.collider.gameObject.GetComponent <Rigidbody2D>();
                 joint.connectedAnchor = hit.point - new Vector2(hit.collider.transform.position.x, hit.collider.transform.position.y);
@@ -67,7 +67,6 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
            line.SetPosition(0, weapon.transform.position);
-
         }
 
         if (Input.GetMouseButtonUp(0))

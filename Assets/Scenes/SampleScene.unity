@@ -678,11 +678,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 581120552}
-  speed: 7.5
-  offset: 0.5
+  joinVelocity: 2
+  minJointDistance: 0.5
   mask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   line: {fileID: 1893946723}
   distanceJoint: 1.5
   hitTransform: {fileID: 0}

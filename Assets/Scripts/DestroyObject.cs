@@ -7,11 +7,11 @@ public class DestroyObject : MonoBehaviour
     public Transform playerPos;
     public Transform thisPosition;
     public float maxSepDistance;
-    MeshRenderer renderer;
+    MeshRenderer Renderer;
     void Start()
     {
         playerPos = FindObjectOfType<Player>().GetComponent<Transform>();
-        renderer = GetComponent<MeshRenderer>();
+        Renderer = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -20,11 +20,11 @@ public class DestroyObject : MonoBehaviour
         float yPos = playerPos.transform.position.y - thisPosition.transform.position.y;
         if(yPos > maxSepDistance)
         {
-            renderer.enabled = false;
+            Renderer.enabled = false;
         }
         else
         {
-            renderer.enabled = true;
+            Renderer.enabled = true;
         }
     }
 }

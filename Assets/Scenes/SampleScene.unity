@@ -500,6 +500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1450053370}
   - component: {fileID: 1450053371}
+  - component: {fileID: 1450053372}
   m_Layer: 0
   m_Name: DangerGenerator
   m_TagString: Untagged
@@ -537,8 +538,24 @@ MonoBehaviour:
   playerPos: {fileID: 1622923587}
   Object: {fileID: 7226223565958831161, guid: 3f8e59a4f35bd4f4eb19424cf81b798b, type: 3}
   spwnProb: 100
-  spawningDist: 12
+  spawningDist: 15
   distanceBtwDanger: 4
+  objectPool: {fileID: 0}
+--- !u!114 &1450053372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450053369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa0d62818f974ca41af7da4dfd7532f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledObject: {fileID: 7226223565958831161, guid: 3f8e59a4f35bd4f4eb19424cf81b798b,
+    type: 3}
+  poolAmount: 10
 --- !u!1 &1620963067
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,6 +796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1665244118}
   - component: {fileID: 1665244117}
+  - component: {fileID: 1665244119}
   m_Layer: 0
   m_Name: CoinGenerator
   m_TagString: Untagged
@@ -802,8 +820,9 @@ MonoBehaviour:
   playerPos: {fileID: 1622923587}
   Object: {fileID: 9016877893171962129, guid: bd32aa83ba687b045bf6c8f9ee3b27f8, type: 3}
   spwnProb: 50
-  spawningDist: 12
+  spawningDist: 15
   distanceBtwDanger: 4
+  objectPool: {fileID: 0}
 --- !u!4 &1665244118
 Transform:
   m_ObjectHideFlags: 0
@@ -818,6 +837,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1665244119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665244116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa0d62818f974ca41af7da4dfd7532f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledObject: {fileID: 9016877893171962129, guid: bd32aa83ba687b045bf6c8f9ee3b27f8,
+    type: 3}
+  poolAmount: 10
 --- !u!1 &1684110768
 GameObject:
   m_ObjectHideFlags: 0

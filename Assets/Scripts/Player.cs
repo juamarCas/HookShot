@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
         if(other.tag == "Coin")
         {
             Debug.Log("Coin Collected");
-            Destroy(other.gameObject); 
+            other.gameObject.SetActive(false); 
         }
     }
 }

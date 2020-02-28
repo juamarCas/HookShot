@@ -8,16 +8,18 @@ public class Generator : MonoBehaviour
     public Transform playerPos;
     public GameObject Object; //can be a coin or danger
     public float spwnProb; //probabilidad de spawnear
-    private float spwn; //compara con la probabilidad
+    
     public float spawningDist;
     int rnd;
     private int region = 0; // divisiones del mapa
     private int preRegion = -9999;
-    public int distanceBtwDanger = 0; 
+    public int distanceBtwDanger = 0;
+
+    public ObjectPooler objectPool; 
 
     void Start()
     {
-  
+        objectPool = GetComponent<ObjectPooler>(); 
     }
 
     // Update is called once per frame
@@ -27,8 +29,8 @@ public class Generator : MonoBehaviour
         //Debug.Log("Distance: " + yDist); 
         if (yDist < spawningDist)
         {
-            spwnProb = Random.Range(0, 100);
-            if(spwn < spwnProb)
+            float spwn = Random.Range(0, 100);
+            if(spwn <=  spwnProb)
             {
                 do
                 {
@@ -48,8 +50,12 @@ public class Generator : MonoBehaviour
 
                 } while (region == preRegion);
                 Debug.Log(region);
-                Instantiate(Object, generatorPos.transform.position, generatorPos.transform.rotation, null);
+                //Instantiate(Object, generatorPos.transform.position, generatorPos.transform.rotation, null);
+                GameObject newObj = objectPool.GetPooledObject(); 
                 generatorPos.transform.position = new Vector3(rnd, generatorPos.transform.position.y + distanceBtwDanger, 0f);
+                newObj.transform.position = generatorPos.transform.position;
+                newObj.transform.rotation = generatorPos.transform.rotation;
+                newObj.SetActive(true); 
                 preRegion = region;
             }
            

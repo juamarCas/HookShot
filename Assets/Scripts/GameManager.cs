@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI coinText;
-    private int coins; 
+    private int coins;
+    private int points; 
     
 
     // Start is called before the first frame update
@@ -30,6 +31,10 @@ public class GameManager : MonoBehaviour
         if (coinText != null)
         {
             coinText.text = coins.ToString(); 
+        }
+        if(scoreText != null)
+        {
+            scoreText.text = points.ToString(); 
         }
     }
 
@@ -43,5 +48,11 @@ public class GameManager : MonoBehaviour
     {
         coins++;
         coinText.text = coins.ToString(); 
+    }
+
+    public void AddPoint()
+    {
+        points++;
+        scoreText.text = points.ToString();
     }
 }

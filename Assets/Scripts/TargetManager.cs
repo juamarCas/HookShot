@@ -6,6 +6,7 @@ public class TargetManager : MonoBehaviour
 {
     public float prob; 
     bool isMovable = false;
+    private bool gavePoint = false; //este bloque ya dio un punto?
 
 
 
@@ -64,6 +65,15 @@ public class TargetManager : MonoBehaviour
         }else if (Vector2.Distance(transform.position, targets[1]) <= 0.1f && goingTo == targets[1])
         {
             goingTo = targets[0];
+        }
+    }
+
+    public void GivePoint()
+    {
+        if (!this.gavePoint)
+        {
+            GameManager.Instance.AddPoint();
+            this.gavePoint = true;
         }
     }
 }

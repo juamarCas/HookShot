@@ -20,11 +20,7 @@ public class DestroyObject : MonoBehaviour
         float yPos = playerPos.transform.position.y - thisPosition.transform.position.y;
         if(yPos > maxSepDistance)
         {
-            Renderer.enabled = false;
-        }
-        else
-        {
-            Renderer.enabled = true;
+            this.gameObject.SetActive(false); 
         }
     }
 }

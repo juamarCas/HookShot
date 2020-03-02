@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
                 joint.connectedBody = hit.collider.gameObject.GetComponent <Rigidbody2D>();
                 joint.connectedAnchor = hit.point - new Vector2(hit.collider.transform.position.x, hit.collider.transform.position.y);
                 joint.distance = Vector2.Distance(this.transform.position, HookShotPosition);
+                hit.collider.GetComponent<TargetManager>().GivePoint(); 
             }
 
            

@@ -17,13 +17,17 @@ public class Player : MonoBehaviour
 
 
     private Vector3 HookShotPosition;  
-    DistanceJoint2D joint; 
+    DistanceJoint2D joint;
 
-    void Start()
-    {       
+    private void Awake()
+    {
         joint = GetComponent<DistanceJoint2D>();
         joint.enabled = false;
-        line.enabled = false; 
+        line.enabled = false;
+    }
+    void Start()
+    {       
+        
     }
 
     // Update is called once per frame
@@ -93,7 +97,8 @@ public class Player : MonoBehaviour
     {
         if(other.tag == "Danger")
         {
-            Debug.Log("Dead"); 
+            Debug.Log("Dead");
+            GameManager.Instance.GameOver(); 
         }
 
         if(other.tag == "Coin")

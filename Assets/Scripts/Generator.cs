@@ -14,6 +14,7 @@ public class Generator : MonoBehaviour
     private int region = 0; // divisiones del mapa
     private int preRegion = -9999;
     public int distanceBtwDanger = 0;
+    public bool needRndPos = true; 
 
     public ObjectPooler objectPool; 
 
@@ -30,33 +31,44 @@ public class Generator : MonoBehaviour
         if (yDist < spawningDist)
         {
             float spwn = Random.Range(0, 100);
+            Debug.Log(this.transform.name + "got prob of: "+ spwn); 
             if(spwn <=  spwnProb)
             {
-                do
+                if (needRndPos)
                 {
-                    rnd = Random.Range(-3, 4);
-                    if (rnd >= -3 && rnd <= -2)
+                    do
                     {
-                        region = 1;
-                    }
-                    else if (rnd >= -1 && rnd <= 1)
-                    {
-                        region = 2;
-                    }
-                    else if (rnd >= 2 && rnd <= 3)
-                    {
-                        region = 3;
-                    }
+                        rnd = Random.Range(-3, 4);
+                        if (rnd >= -3 && rnd <= -2)
+                        {
+                            region = 1;
+                        }
+                        else if (rnd >= -1 && rnd <= 1)
+                        {
+                            region = 2;
+                        }
+                        else if (rnd >= 2 && rnd <= 3)
+                        {
+                            region = 3;
+                        }
 
-                } while (region == preRegion);
+                    } while (region == preRegion);
+                }
+                else
+                {
+                    rnd = (int)this.transform.position.x;
+                }
                 Debug.Log(region);
-                //Instantiate(Object, generatorPos.transform.position, generatorPos.transform.rotation, null);
-                GameObject newObj = objectPool.GetPooledObject(); 
+                GameObject newObj = objectPool.GetPooledObject();
                 generatorPos.transform.position = new Vector3(rnd, generatorPos.transform.position.y + distanceBtwDanger, 0f);
                 newObj.transform.position = generatorPos.transform.position;
                 newObj.transform.rotation = generatorPos.transform.rotation;
-                newObj.SetActive(true); 
+                newObj.SetActive(true);
                 preRegion = region;
+            }
+            else
+            {
+                generatorPos.transform.position = new Vector3(rnd, generatorPos.transform.position.y + distanceBtwDanger, 0f);
             }
            
         }

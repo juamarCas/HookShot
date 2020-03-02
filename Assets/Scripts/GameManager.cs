@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement; 
 using UnityEngine;
 using TMPro; 
 
@@ -22,7 +23,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI coinText;
     private int coins;
-    private int points; 
+    private int points;
+
+    private int totalCoins;
+    private int highScore; 
     
 
     // Start is called before the first frame update
@@ -55,4 +59,15 @@ public class GameManager : MonoBehaviour
         points++;
         scoreText.text = points.ToString();
     }
+
+
+    #region GameOver
+    public void GameOver()
+    {
+        totalCoins += coins;
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name); 
+    }
+
+    #endregion
 }

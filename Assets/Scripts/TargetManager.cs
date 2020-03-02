@@ -39,7 +39,7 @@ public class TargetManager : MonoBehaviour
         if(chance < prob)
         {
             isMovable = true;
-            for (int i = 0; i< numTargets; i++)
+            for (int i = 0; i < numTargets; i++)
             {
                 Vector2 targetPos = new Vector2(Random.Range(-d_x, d_x), this.transform.position.y /*+ Random.Range(-d_y, d_y)*/);
                 targets[i] = targetPos;

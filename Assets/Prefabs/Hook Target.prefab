@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 826ffe28cfc3c5a4ea51b28bd67b178b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prob: 50
+  prob: 10
   numTargets: 2
   targets:
   - {x: 2.1509927e+23, y: 0.00004253294}

@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
             {
                 line.SetPosition(1, joint.connectedBody.transform.position);
             }
-            catch(UnassignedReferenceException)
+            catch(UnityException)
             {
                 Debug.Log("no te preocupes"); 
             }

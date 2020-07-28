@@ -354,7 +354,7 @@ MonoBehaviour:
   generatorPos: {fileID: 505240237}
   playerPos: {fileID: 1622923587}
   Object: {fileID: 2191192016283859419, guid: 48adfc94625ea7b498a505a5ddfbb0f0, type: 3}
-  spwnProb: 50
+  spwnProb: 25
   spawningDist: 15
   distanceBtwDanger: 4
   needRndPos: 0
@@ -1028,7 +1028,7 @@ MonoBehaviour:
   generatorPos: {fileID: 1151711088}
   playerPos: {fileID: 1622923587}
   Object: {fileID: 2191192016283859419, guid: 48adfc94625ea7b498a505a5ddfbb0f0, type: 3}
-  spwnProb: 20
+  spwnProb: 25
   spawningDist: 15
   distanceBtwDanger: 4
   needRndPos: 0

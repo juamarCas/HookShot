@@ -24,6 +24,7 @@ public class Generator : MonoBehaviour
     {
         objectPool = GetComponent<ObjectPooler>();
         originalPos_x = transform.position.x;
+        
     }
 
 

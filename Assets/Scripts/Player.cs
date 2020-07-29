@@ -63,6 +63,7 @@ public class Player : MonoBehaviour {
                 joint.distance = Vector2.Distance (this.transform.position, HookShotPosition);
                 hit.collider.GetComponent<TargetManager> ().GivePoint ();
             }
+            
         }
         if (Input.GetMouseButton (0)) {
             try {
@@ -135,6 +136,7 @@ public class Player : MonoBehaviour {
     private void OnTriggerEnter2D (Collider2D other) {
         if (other.tag == "Danger") {
             Debug.Log ("Dead");
+            hasTouched = false;
             GameManager.Instance.GameOver ();
         }
 

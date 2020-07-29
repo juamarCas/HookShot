@@ -73,7 +73,7 @@ public class Player : MonoBehaviour {
         shootDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
         shootDirection = shootDirection - this.gameObject.transform.position; 
         shootDirection.z = 0; 
-        hit = Physics2D.Raycast(weapon.transform.position, shootDirection, maxDistanceGrapple, whatCanWeGrapple.value);
+        hit = Physics2D.Raycast(weapon.transform.position, shootDirection, maxDistanceGrapple, whatCanWeGrapple);
         if(hit.collider != null && hit.collider.gameObject.GetComponent<Rigidbody2D> () != null){
             line.enabled = true; 
             grapplePoint = hit.point; 

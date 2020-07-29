@@ -4,23 +4,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public GameObject weapon;
-    public float joinVelocity = 7.5f;
-    public float minJointDistance = 0.5f;
-    public LayerMask mask;
-    public LineRenderer line;
-    public float distanceJoint = 0;
-    public Transform hitTransform;
-    private Vector2 hitpoint;
+    [Header("Joint properties")]
+    [Range(0,1)]
+    public float jointDampingRatio = 0.5f; 
+    public LayerMask whatCanWeGrapple;
+    public float distanceBetweenObjects = 10.0f; 
+    public float grappleVel = 8.0f; 
+    public  int maxDistanceGrapple = 10; 
 
+    [Header("Weapon")]
+    public GameObject weapon;
+    public LineRenderer line;
+   
+    private Vector2 hitpoint;
+    private Vector3 grapplePoint; 
     private Vector3 HookShotPosition;
-    DistanceJoint2D joint;
+    private Vector3 currentGrapplePosition; 
+
+    private SpringJoint2D joint;
+   
 
     private bool hasTouched = false; // detectar si está tocando la pantalla
 
     private void Awake () {
-        joint = GetComponent<DistanceJoint2D> ();
-        joint.enabled = false;
+      //  joint = GetComponent<SpringJoint2D> ();
+        line = GetComponent<LineRenderer>(); 
+      
         line.enabled = false;
     }
     void Start () {
@@ -30,110 +39,75 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-        if (joint.distance > distanceJoint) {
-            joint.distance = Mathf.Lerp (joint.distance, minJointDistance, joinVelocity * Time.deltaTime);
-        }
         HookShot ();
 
+    }
+
+    void LateUpdate(){
+        DrawRope(); 
     }
 
     private void HookShot () {
 #region WinCompiler
 #if UNITY_EDITOR_WIN
-
-        if (Input.GetMouseButtonDown (0)) {
-
-            Vector3 shootDirection;
-            shootDirection = Input.mousePosition;
-            shootDirection = Camera.main.ScreenToWorldPoint (shootDirection);
-            shootDirection = shootDirection - this.transform.position;
-            shootDirection.z = 0.0f;
-            RaycastHit2D hit = Physics2D.Raycast (weapon.transform.position, shootDirection, Mathf.Infinity, mask.value);
-            line.enabled = true;
-
-            if (hit.collider != null && hit.collider.gameObject.GetComponent<Rigidbody2D> () != null) {
-                hitpoint = hit.point;
-                line.SetPosition (1, hit.point);
-                line.SetPosition (0, weapon.transform.position);
-
-                HookShotPosition = hit.point; // punto donde colisionó el raycast
-                joint.enabled = true;
-                joint.connectedBody = hit.collider.gameObject.GetComponent<Rigidbody2D> ();
-                joint.connectedAnchor = hit.point - new Vector2 (hit.collider.transform.position.x, hit.collider.transform.position.y);
-                joint.distance = Vector2.Distance (this.transform.position, HookShotPosition);
-                hit.collider.GetComponent<TargetManager> ().GivePoint ();
-            }
-            
-        }
-        if (Input.GetMouseButton (0)) {
-            try {
-                line.SetPosition (1, joint.connectedBody.transform.position);
-            } catch (UnityException) {
-                Debug.Log ("no te preocupes");
-            }
-
-            line.SetPosition (0, weapon.transform.position);
-        }
-
-        if (Input.GetMouseButtonUp (0)) {
-            line.SetPosition (1, weapon.transform.position);
-            joint.enabled = false;
-            line.enabled = false;
-        }
+    if(Input.GetMouseButtonDown(0)){
+        startGrap(); 
+    }else if (Input.GetMouseButtonUp(0)){
+        stopGrap(); 
+    }
+       
 
 #endif
         #endregion
 
 #if UNITY_ANDROID
 
-        if (Input.touchCount > 0) {
-            Touch touch = Input.GetTouch (0);
-            if (touch.phase == TouchPhase.Began && !hasTouched) {
-                Vector3 dir;
-                dir = Camera.main.ScreenToWorldPoint (touch.position);
-                dir = dir - this.transform.position;
-                dir.z = 0.0f;
-                RaycastHit2D hit = Physics2D.Raycast (weapon.transform.position, dir, Mathf.Infinity, mask.value);
-
-                line.enabled = true;
-                if (hit.collider != null && hit.collider.gameObject.GetComponent<Rigidbody2D> () != null) {
-                    hitpoint = hit.point;
-                    line.SetPosition (1, hit.point);
-                    line.SetPosition (0, weapon.transform.position);
-
-                    HookShotPosition = hit.point; // punto donde colisionó el raycast
-                    joint.enabled = true;
-                    joint.connectedBody = hit.collider.gameObject.GetComponent<Rigidbody2D> ();
-                    joint.connectedAnchor = hit.point - new Vector2 (hit.collider.transform.position.x, hit.collider.transform.position.y);
-                    joint.distance = Vector2.Distance (this.transform.position, HookShotPosition);
-                    hit.collider.GetComponent<TargetManager> ().GivePoint ();
-                }
-                hasTouched = true;
-            }
-
-            if (hasTouched) {
-                try {
-                    line.SetPosition (1, joint.connectedBody.transform.position);
-                } catch (UnityException) {
-                    Debug.Log ("no te preocupes");
-                }
-
-                line.SetPosition (0, weapon.transform.position);
-            }
-            if (touch.phase == TouchPhase.Ended) {
-                line.SetPosition (1, weapon.transform.position);
-                joint.enabled = false;
-                line.enabled = false;
-                hasTouched = false;
-            }
-
-        }
 
 #endif
 
     }
 
+    private void  startGrap(){
+        RaycastHit2D hit; 
+        Vector3 shootDirection; 
+        shootDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+        shootDirection = shootDirection - this.gameObject.transform.position; 
+        shootDirection.z = 0; 
+        hit = Physics2D.Raycast(weapon.transform.position, shootDirection, maxDistanceGrapple, whatCanWeGrapple.value);
+        if(hit.collider != null && hit.collider.gameObject.GetComponent<Rigidbody2D> () != null){
+            line.enabled = true; 
+            grapplePoint = hit.point; 
+            joint = this.gameObject.AddComponent<SpringJoint2D>(); 
+            joint.autoConfigureConnectedAnchor = false; 
+            //joint.anchor = weapon.transform.position; 
+            joint.connectedAnchor = grapplePoint; 
+
+            float distanceFromPoint = Vector3.Distance(weapon.transform.position, grapplePoint); 
+
+            joint.distance = distanceBetweenObjects;
+            joint.dampingRatio = jointDampingRatio; 
+
+            line.positionCount = 2; 
+            currentGrapplePosition = weapon.transform.position; 
+        }
+    }
+
+    private void stopGrap(){
+        line.positionCount = 0; 
+        line.enabled = false; 
+        Destroy(joint); 
+    }
+
+    private void DrawRope(){
+        if(!joint) return; 
+
+        currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, grapplePoint, grappleVel * Time.deltaTime ); 
+        line.SetPosition(0, weapon.transform.position); 
+        line.SetPosition(1, grapplePoint); 
+    }
+
     private void OnTriggerEnter2D (Collider2D other) {
+        //Debug.Log("Triggered"); 
         if (other.tag == "Danger") {
             Debug.Log ("Dead");
             hasTouched = false;

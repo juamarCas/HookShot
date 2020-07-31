@@ -6,23 +6,26 @@ public class Generator : MonoBehaviour
 {
     public Transform generatorPos;
     public Transform playerPos;
-    public GameObject Object; //can be a coin or danger
+  
     public float spwnProb; //probabilidad de spawnear
     
     public float spawningDist;
     int rnd;
-    private int region = 0; // divisiones del mapa
-    private int preRegion = -9999;
     private int prePos = -99999; 
     public int distanceBtwDanger = 0;
     public bool needRndPos = true; // falso = solo hace spawn en el lugar donde está el generador
     private float originalPos_x;
+    public int minTS; //min target selector
+    public int maxTS; //max target selector
+    private int targetSelector; 
 
-    public ObjectPooler objectPool; 
+
+    public ObjectPooler[] objectPool; 
+
 
     void Start()
     {
-        objectPool = GetComponent<ObjectPooler>();
+
         originalPos_x = transform.position.x;
         
     }
@@ -46,8 +49,9 @@ public class Generator : MonoBehaviour
                       
                     } while (rnd == prePos);
                 }
+                targetSelector = Random.Range(minTS, maxTS + 1); 
                 prePos = rnd; 
-                GameObject newObj = objectPool.GetPooledObject();
+                GameObject newObj = objectPool[targetSelector].GetPooledObject();
                 generatorPos.transform.position = new Vector2(generatorPos.transform.position.x + rnd, generatorPos.transform.position.y + distanceBtwDanger);
                 newObj.transform.position = generatorPos.transform.position;
                 newObj.transform.rotation = generatorPos.transform.rotation;

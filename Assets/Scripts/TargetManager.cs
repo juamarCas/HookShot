@@ -7,6 +7,8 @@ public class TargetManager : MonoBehaviour {
     bool isMovable = false;
     private bool gavePoint = false; //este bloque ya dio un punto?
 
+    
+
     [Header ("Movement")]
     public int numTargets;
     public Vector2[] targets;
@@ -17,7 +19,6 @@ public class TargetManager : MonoBehaviour {
 
     void Start () {
         initializeMovement ();
-
     }
 
     // Update is called once per frame
@@ -25,7 +26,7 @@ public class TargetManager : MonoBehaviour {
         if (isMovable)
             move ();
     }
-
+    #region Move
     public void initializeMovement () {
 
         float chance = Random.Range (0, 100);
@@ -54,6 +55,9 @@ public class TargetManager : MonoBehaviour {
             goingTo = targets[0];
         }
     }
+    #endregion
+
+   
 
     public void GivePoint () {
         if (!this.gavePoint) {

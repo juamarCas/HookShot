@@ -19,6 +19,7 @@ public class Player : MonoBehaviour {
     [Header ("Weapon")]
     public GameObject weapon;
     public LineRenderer line;
+    private LineRenderer l; //
 
     private Vector2 hitpoint;
     private Vector3 grapplePoint;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour {
     private Rigidbody2D rb;
 
     private SpringJoint2D joint;
+    private SpringJoint2D j; // reemplazo
 
     private void Awake () {
         //  joint = GetComponent<SpringJoint2D> ();
@@ -73,14 +75,13 @@ public class Player : MonoBehaviour {
                 case TouchPhase.Moved: //calculate direction of impulse
                     Vector3 newPos = new Vector3 (touch.position.x, touch.position.y, 0f);
                     float swipeValue = startPosition.x - newPos.x;
-                    Vector2 moveDirection = new Vector2 (rb.velocity.x, rb.velocity.y).normalized;
                     float nwimfrce = 0;
-                    if (rb.velocity.x < minVelx) {
-                        if (Mathf.Abs (swipeValue) > Mathf.Abs (impulseTrh)) {
-                            if (swipeValue > 0.1) nwimfrce = -impulseForce;                        
-                            if (swipeValue < -0.1) nwimfrce = impulseForce;
-                            rb.AddForce (Vector2.right * nwimfrce, ForceMode2D.Impulse);
-                        }
+
+                    if (Mathf.Abs (swipeValue) > Mathf.Abs (impulseTrh)) {
+                        if (swipeValue > 0.1) nwimfrce = -impulseForce;
+                        else if (swipeValue < -0.1) nwimfrce = impulseForce * 1.35f;
+
+                        rb.AddForce (Vector2.right * nwimfrce, ForceMode2D.Impulse);
                     }
 
                     startPosition = newPos;
@@ -118,6 +119,13 @@ public class Player : MonoBehaviour {
                 line.positionCount = 2;
                 currentGrapplePosition = weapon.transform.position;
                 hit.collider.GetComponent<TargetManager> ().GivePoint ();
+                if(hit.collider.name == "ExplodeTarget"){
+                    Debug.Log(hit.collider.name); 
+                    TargetExplotion explotion = hit.collider.gameObject.GetComponent<TargetExplotion>(); 
+                    j = joint; 
+                    l = line;  
+                    explotion.StartExplotion(); 
+                }
             }
 
         } catch (NullReferenceException ex) {
@@ -125,6 +133,16 @@ public class Player : MonoBehaviour {
             return;
         }
 
+    }
+
+//this function is used to avoid destroying the new joint if the player has sticked to another target
+    public void DeletePreviousJoint(){
+        if(j != null){
+            Destroy(j);
+            l.enabled = false;  
+        }else{
+            return; 
+        }
     }
 
     private void stopGrap () {

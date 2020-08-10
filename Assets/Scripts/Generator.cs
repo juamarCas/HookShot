@@ -49,8 +49,8 @@ public class Generator : MonoBehaviour
                       
                     } while (rnd == prePos);
                 }
-                targetSelector = Random.Range(minTS, maxTS + 1); 
-                prePos = rnd; 
+                targetSelector = Random.Range(minTS, objectPool.Length); 
+                prePos = rnd;  
                 GameObject newObj = objectPool[targetSelector].GetPooledObject();
                 generatorPos.transform.position = new Vector2(generatorPos.transform.position.x + rnd, generatorPos.transform.position.y + distanceBtwDanger);
                 newObj.transform.position = generatorPos.transform.position;

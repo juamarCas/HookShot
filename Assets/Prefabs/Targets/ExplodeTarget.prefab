@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -1642432489592156794}
   m_Layer: 8
   m_Name: ExplodeTarget
-  m_TagString: Untagged
+  m_TagString: ExplodeTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 72aa60b5a5314ac4f9db67c6059a0a26, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explotionStartingTime: 4
+  p: {fileID: 4341871786361638289, guid: 890677b0880fefc46a9b39f57b103515, type: 3}
 --- !u!61 &4818469799446058093
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -175,5 +176,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPos: {fileID: 0}
-  thisPosition: {fileID: 0}
-  maxSepDistance: 0
+  thisPosition: {fileID: 4818469799446058090}
+  maxSepDistance: 15

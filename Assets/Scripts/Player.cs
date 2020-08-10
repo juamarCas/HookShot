@@ -14,28 +14,30 @@ public class Player : MonoBehaviour {
     public int maxDistanceGrapple = 10;
     public float impulseTrh = 1f;
     public float impulseForce = 2.0f;
-    public float minVelx = 1.0f;
 
     [Header ("Weapon")]
     public GameObject weapon;
     public LineRenderer line;
-    private LineRenderer l; //
+  
 
-    private Vector2 hitpoint;
     private Vector3 grapplePoint;
-    private Vector3 HookShotPosition;
     private Vector3 startPosition;
     private Vector3 currentGrapplePosition;
     private Rigidbody2D rb;
 
     private SpringJoint2D joint;
-    private SpringJoint2D j; // reemplazo
+    private TargetExplotion explotion; 
+    
+
+  
+    private bool isHanged = false;
 
     private void Awake () {
         //  joint = GetComponent<SpringJoint2D> ();
-        line = GetComponent<LineRenderer> ();
         rb = GetComponent<Rigidbody2D> ();
+        line = GetComponent<LineRenderer> ();
         line.enabled = false;
+      
     }
     // Update is called once per frame
     void Update () {
@@ -53,6 +55,10 @@ public class Player : MonoBehaviour {
         if (Input.GetMouseButtonDown (0)) {
             startGrap (Input.mousePosition);
         } else if (Input.GetMouseButtonUp (0)) {
+            if(explotion != null){
+                explotion.playerHanged = false; 
+                explotion = null; 
+            }
             stopGrap ();
         }
 
@@ -72,7 +78,7 @@ public class Player : MonoBehaviour {
                     startGrap (pos);
                     break;
 
-                case TouchPhase.Moved: //calculate direction of impulse
+                case TouchPhase.Moved: //impulse
                     Vector3 newPos = new Vector3 (touch.position.x, touch.position.y, 0f);
                     float swipeValue = startPosition.x - newPos.x;
                     float nwimfrce = 0;
@@ -88,7 +94,7 @@ public class Player : MonoBehaviour {
                     break;
 
                 case TouchPhase.Ended:
-                    // releas target
+                    // releas target 
                     stopGrap ();
                     break;
             }
@@ -115,39 +121,30 @@ public class Player : MonoBehaviour {
 
                 joint.distance = distanceBetweenObjects;
                 joint.dampingRatio = jointDampingRatio;
-
+                isHanged = true;
                 line.positionCount = 2;
                 currentGrapplePosition = weapon.transform.position;
                 hit.collider.GetComponent<TargetManager> ().GivePoint ();
-                if(hit.collider.name == "ExplodeTarget"){
-                    Debug.Log(hit.collider.name); 
-                    TargetExplotion explotion = hit.collider.gameObject.GetComponent<TargetExplotion>(); 
-                    j = joint; 
-                    l = line;  
-                    explotion.StartExplotion(); 
+                if (hit.collider.tag == "ExplodeTarget") {
+                    explotion = hit.collider.gameObject.GetComponent<TargetExplotion> ();
+                    explotion.playerHanged = true; 
+                    explotion.StartCoroutine (explotion.StartExplotion ());
+       
                 }
             }
 
         } catch (NullReferenceException ex) {
-            Debug.Log ("Catched exception");
+            Debug.Log ("Catched exception: " + ex);
             return;
         }
 
     }
 
-//this function is used to avoid destroying the new joint if the player has sticked to another target
-    public void DeletePreviousJoint(){
-        if(j != null){
-            Destroy(j);
-            l.enabled = false;  
-        }else{
-            return; 
-        }
-    }
-
-    private void stopGrap () {
+    //this function is used to avoid destroying the new joint if the player has sticked to another target 
+    public void stopGrap () {
         line.positionCount = 0;
         line.enabled = false;
+        isHanged = false;
         Destroy (joint);
     }
 
@@ -160,7 +157,6 @@ public class Player : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D (Collider2D other) {
-        Debug.Log ("Triggered");
         if (other.tag == "Danger") {
             Debug.Log ("Dead");
             GameManager.Instance.GameOver ();

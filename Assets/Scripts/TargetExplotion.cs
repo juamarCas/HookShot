@@ -8,35 +8,34 @@ public class TargetExplotion : MonoBehaviour {
     private float explotionCounter;
     private bool explode = false;
     private bool hasExplode = false;
-    
+    public Player player;
+
+    public bool playerHanged = false; 
+  
 
     private void Start () {
 
         explotionCounter = explotionStartingTime;
+        player = GameObject.Find("PlayerHolder").GetComponent<Player>();
     }
 
-    private void Update () {
-        if (!hasExplode) {
-            if (explotionCounter <= 0) {
-                //explode
-                Debug.Log ("Explodee");
-                Explode(); 
-                hasExplode = true;
-            } else if (explode) {
-                explotionCounter -= Time.deltaTime;
-            }
-        }
+    private void Update () {}
 
-    }
-
-    public void StartExplotion () {
-        explode = true;
+    public IEnumerator StartExplotion(){
+      
+        yield return new WaitForSeconds(5);
+        Explode(); 
+        hasExplode = true; 
     }
 
     void Explode () {
-        Player p = GameObject.Find("PlayerHolder").GetComponent<Player>(); 
-        p.DeletePreviousJoint(); 
+        if(playerHanged) player.stopGrap();      
         this.gameObject.SetActive(false); 
+    }
+
+    void OnDisable(){
+        explode = false; 
+        hasExplode = false; 
     }
 
 }

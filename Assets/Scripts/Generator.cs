@@ -33,8 +33,7 @@ public class Generator : MonoBehaviour
 
     void Update()
     {
-        float yDist = generatorPos.position.y - playerPos.position.y;    
-        //Debug.Log("Distance: " + yDist); 
+        float yDist = generatorPos.position.y - playerPos.position.y;     
         if (yDist < spawningDist)
         {
             float spwn = Random.Range(0, 100);

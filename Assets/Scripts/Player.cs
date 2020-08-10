@@ -18,7 +18,9 @@ public class Player : MonoBehaviour {
     [Header ("Weapon")]
     public GameObject weapon;
     public LineRenderer line;
-  
+
+    [Header ("Components")]
+    public float wallImpulse = 2.0f;
 
     private Vector3 grapplePoint;
     private Vector3 startPosition;
@@ -26,10 +28,8 @@ public class Player : MonoBehaviour {
     private Rigidbody2D rb;
 
     private SpringJoint2D joint;
-    private TargetExplotion explotion; 
-    
+    private TargetExplotion explotion;
 
-  
     private bool isHanged = false;
 
     private void Awake () {
@@ -37,11 +37,10 @@ public class Player : MonoBehaviour {
         rb = GetComponent<Rigidbody2D> ();
         line = GetComponent<LineRenderer> ();
         line.enabled = false;
-      
+
     }
     // Update is called once per frame
     void Update () {
-
         HookShot ();
 
     }
@@ -55,9 +54,9 @@ public class Player : MonoBehaviour {
         if (Input.GetMouseButtonDown (0)) {
             startGrap (Input.mousePosition);
         } else if (Input.GetMouseButtonUp (0)) {
-            if(explotion != null){
-                explotion.playerHanged = false; 
-                explotion = null; 
+            if (explotion != null) {
+                explotion.playerHanged = false;
+                explotion = null;
             }
             stopGrap ();
         }
@@ -79,18 +78,21 @@ public class Player : MonoBehaviour {
                     break;
 
                 case TouchPhase.Moved: //impulse
-                    Vector3 newPos = new Vector3 (touch.position.x, touch.position.y, 0f);
-                    float swipeValue = startPosition.x - newPos.x;
-                    float nwimfrce = 0;
+                    if (isHanged) {
+                        Vector3 newPos = new Vector3 (touch.position.x, touch.position.y, 0f);
+                        float swipeValue = startPosition.x - newPos.x;
+                        float nwimfrce = 0;
 
-                    if (Mathf.Abs (swipeValue) > Mathf.Abs (impulseTrh)) {
-                        if (swipeValue > 0.1) nwimfrce = -impulseForce;
-                        else if (swipeValue < -0.1) nwimfrce = impulseForce * 1.35f;
+                        if (Mathf.Abs (swipeValue) > Mathf.Abs (impulseTrh)) {
+                            if (swipeValue > 0.1) nwimfrce = -impulseForce;
+                            else if (swipeValue < -0.1) nwimfrce = impulseForce * 1.35f;
 
-                        rb.AddForce (Vector2.right * nwimfrce, ForceMode2D.Impulse);
+                            rb.AddForce (Vector2.right * nwimfrce, ForceMode2D.Impulse);
+                        }
+
+                        startPosition = newPos;
                     }
 
-                    startPosition = newPos;
                     break;
 
                 case TouchPhase.Ended:
@@ -127,9 +129,9 @@ public class Player : MonoBehaviour {
                 hit.collider.GetComponent<TargetManager> ().GivePoint ();
                 if (hit.collider.tag == "ExplodeTarget") {
                     explotion = hit.collider.gameObject.GetComponent<TargetExplotion> ();
-                    explotion.playerHanged = true; 
+                    explotion.playerHanged = true;
                     explotion.StartCoroutine (explotion.StartExplotion ());
-       
+
                 }
             }
 
@@ -157,16 +159,50 @@ public class Player : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D (Collider2D other) {
-        if (other.tag == "Danger") {
-            Debug.Log ("Dead");
-            GameManager.Instance.GameOver ();
+        switch (other.tag) {
+            case "Danger":
+                Debug.Log ("Dead");
+                GameManager.Instance.GameOver ();
+                break;
+
+            case "Coin":
+                Debug.Log ("Coin Collected");
+                other.gameObject.SetActive (false);
+                GameManager.Instance.AddCoin ();
+                break;
+
+            default:
+                break;
         }
 
-        if (other.tag == "Coin") {
-            Debug.Log ("Coin Collected");
-            other.gameObject.SetActive (false);
-            GameManager.Instance.AddCoin ();
+    }
+
+    void OnCollisionEnter2D (Collision2D other) {
+        switch (other.collider.tag) {
+            case "RightWall":
+                if (!isHanged) {
+                    Vector2 dir1 = new Vector2 (-1, 2).normalized;
+                    WallBounce (dir1);
+                }
+
+                break;
+
+            case "LeftWall":
+                if (!isHanged) {
+                    Vector2 dir2 = new Vector2 (1, 2).normalized;
+                    WallBounce (dir2);
+                }
+                break;
+
+            default:
+                break;
+
         }
+    }
+
+    private void WallBounce (Vector2 bounceDir) {
+        rb.velocity = new Vector2 (0, 0);
+        rb.AddForce (bounceDir * wallImpulse, ForceMode2D.Impulse);
     }
 
 }

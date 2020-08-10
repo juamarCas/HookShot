@@ -8,6 +8,8 @@ TagManager:
   - Coin
   - Target
   - ExplodeTarget
+  - LeftWall
+  - RightWall
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingTarget : TargetManager
+public class MovingTarget : MonoBehaviour
 {
     public Transform posX; 
     public Transform negX; 
